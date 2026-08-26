@@ -1,9 +1,9 @@
 % Definindo os progenitores e seus filhos
-progenitor(maria, pedro).
+progenitor(samira, pedro).
 progenitor(vincenzo, pedro).
-progenitor(tiago, maria).
+progenitor(tiago, samira).
 progenitor(tiago, guilherme).
-progenitor(marcela, maria).
+progenitor(marcela, samira).
 progenitor(marcela, guilherme).
 progenitor(guilherme, joao).
 progenitor(pietra, joao).
@@ -22,21 +22,21 @@ sexo(luiz, masculino).
 sexo(vinicius, masculino).
 
 % Definindo o sexo feminino
-sexo(maria, feminino).
+sexo(samira, feminino).
 sexo(pietra, feminino).
 sexo(marcela, feminino).
 sexo(nathalia, feminino).
 sexo(paula, feminino).
 
-% Algoritmo para identificar a irm„.
+% Algoritmo para identificar a irm√£.
 irma(X,Y):-progenitor(A,X),progenitor(A,Y),X\==Y,sexo(X, feminino).
-% Algoritmo para identificar o irm„o.
+% Algoritmo para identificar o irm√£o.
 irmao(X,Y):-progenitor(A,X),progenitor(A,Y),X\==Y,sexo(X,masculino).
-% Algoritmo para identificar o avÙ.
-vÙ(X,Y):-progenitor(X,A),progenitor(Y,A),sexo(X,masculino).
-% Algoritmo para identificar a avÛ.
-vÛ(X,Y):-progenitor(X,A),progenitor(Y,A),sexo(X,feminino).
-% Algoritmo para identificar a m„e.
+% Algoritmo para identificar o av√¥.
+v√¥(X,Y):-progenitor(X,A),progenitor(Y,A),sexo(X,masculino).
+% Algoritmo para identificar a av√≥.
+v√≥(X,Y):-progenitor(X,A),progenitor(Y,A),sexo(X,feminino).
+% Algoritmo para identificar a m√£e.
 mae(X,Y):-progenitor(X,Y),sexo(X,feminino).
 % Algoritmo para identificar o pai.
 pai(X,Y):-progenitor(X,Y),sexo(X,masculino).
