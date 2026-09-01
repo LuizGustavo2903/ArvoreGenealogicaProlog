@@ -1,32 +1,101 @@
 % Definindo os progenitores e seus filhos
-progenitor(samira, pedro).
-progenitor(vincenzo, pedro).
-progenitor(tiago, samira).
-progenitor(tiago, guilherme).
-progenitor(marcela, samira).
-progenitor(marcela, guilherme).
-progenitor(guilherme, joao).
-progenitor(pietra, joao).
-progenitor(luiz, tiago).
-progenitor(nathalia, tiago).
-progenitor(vinicius, marcela).
-progenitor(paula, marcela).
+progenitor(deus,todos).
+progetinor(deus,helena).
+progenitor(deus,alice).
+progenitor(helena,lucas).
+progenitor(arthur,lucas).
+progenitor(alice,cecilia).
+progenitor(alice,davi).
+progenitor(samuel,cecilia).
+progenitor(samuel,davi).
+progenitor(sophia,valentina).
+progenitor(sophia,anthony).
+progenitor(sophia,daniel).
+progenitor(lucas,valentina).
+progenitor(lucas,anthony).
+progenitor(lucas,daniel).
+progenitor(cecilia,ada).
+progenitor(pedro,ada).
+progenitor(davi,diego).
+progenitor(antonella,diego).
+progenitor(valentina,clara).
+progenitor(rafael,clara).
+progenitor(daniel,bruce).
+progenitor(daniel,lorena).
+progenitor(lara,bruce).
+progenitor(lara,lorena).
+progenitor(sarah,leonardo).
+progenitor(sarah,nicole).
+progenitor(diego,leonardo).
+progenitor(diego,nicole).
+progenitor(clara,melissa).
+progenitor(oliver,melissa).
+progenitor(lorena,bianca).
+progenitor(gabriela,bianca).
+progenitor(nicole,samira).
+progenitor(yuri,samira).
+progenitor(melissa,catharina).
+progenitor(melissa,vitoria).
+progenitor(melissa,bryan).
+progenitor(leon,catharina).
+progenitor(leon,vitoria).
+progenitor(leon,bryan).
+progenitor(bianca,yasmin).
+progenitor(peter,yasmin).
+progenitor(samira,nicolas).
+progenitor(isacc,nicolas).
+progenitor(yasmin,hinata).
+progenitor(natanael,hinata).
+progenitor(nicolas,luna).
+progenitor(charlotte,luna).
 
-% Definindo o sexo masculino
-sexo(vincenzo, masculino).
-sexo(pedro, masculino).
-sexo(guilherme, masculino).
-sexo(joao, masculino).
-sexo(tiago, masculino).
-sexo(luiz, masculino).
-sexo(vinicius, masculino).
+% Definindo os homens
 
-% Definindo o sexo feminino
-sexo(samira, feminino).
-sexo(pietra, feminino).
-sexo(marcela, feminino).
-sexo(nathalia, feminino).
-sexo(paula, feminino).
+sexo(arthur,masculino).
+sexo(samuel,masculino).
+sexo(lucas,masculino).
+sexo(pedro,masculino).
+sexo(davi,masculino).
+sexo(rafael,masculino).
+sexo(anthony,masculino).
+sexo(daniel,masculino).
+sexo(diego,masculino).
+sexo(oliver,masculino).
+sexo(bruce,masculino).
+sexo(leonardo,masculino).
+sexo(yuri,masculino).
+sexo(leon,masculino).
+sexo(peter,masculino).
+sexo(isacc,masculino).
+sexo(bryan,masculino).
+sexo(natanael,masculino).
+sexo(nicolas,masculino).
+
+% Definindo mulheres
+
+sexo(helena,feminino).
+sexo(alice,feminino).
+sexo(sophia,feminino).
+sexo(cecilia,feminino).
+sexo(antonella,feminino).
+sexo(valentina,feminino).
+sexo(lara,feminino).
+sexo(ada,feminino).
+sexo(sarah,feminino).
+sexo(clara,feminino).
+sexo(lorena,feminino).
+sexo(gabriela,feminino).
+sexo(nicole,feminino).
+sexo(melissa,feminino).
+sexo(bianca,feminino).
+sexo(samira,feminino).
+sexo(catharina,feminino).
+sexo(vitoria,feminino).
+sexo(yasmin,feminino).
+sexo(charlottte,feminino).
+sexo(hinata,feminino).
+sexo(luna,feminino).
+
 
 % Algoritmo para identificar a irmã.
 irma(X,Y):-progenitor(A,X),progenitor(A,Y),X\==Y,sexo(X, feminino).
