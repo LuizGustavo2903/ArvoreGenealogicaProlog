@@ -1,6 +1,6 @@
 % Definindo os progenitores e seus filhos
 progenitor(deus,todos).
-progetinor(deus,helena).
+progenitor(deus,helena).
 progenitor(deus,alice).
 progenitor(helena,lucas).
 progenitor(arthur,lucas).
@@ -92,7 +92,7 @@ sexo(samira,feminino).
 sexo(catharina,feminino).
 sexo(vitoria,feminino).
 sexo(yasmin,feminino).
-sexo(charlottte,feminino).
+sexo(charlotte,feminino).
 sexo(hinata,feminino).
 sexo(luna,feminino).
 
@@ -102,9 +102,9 @@ irma(X,Y):-progenitor(A,X),progenitor(A,Y),X\==Y,sexo(X, feminino).
 % Algoritmo para identificar o irmão.
 irmao(X,Y):-progenitor(A,X),progenitor(A,Y),X\==Y,sexo(X,masculino).
 % Algoritmo para identificar o avô.
-vô(X,Y):-progenitor(X,A),progenitor(Y,A),sexo(X,masculino).
+vô(X,Y):-progenitor(X,A),progenitor(A,Y),sexo(X,masculino).
 % Algoritmo para identificar a avó.
-vó(X,Y):-progenitor(X,A),progenitor(Y,A),sexo(X,feminino).
+vó(X,Y):-progenitor(X,A),progenitor(A,Y),sexo(X,feminino).
 % Algoritmo para identificar a mãe.
 mae(X,Y):-progenitor(X,Y),sexo(X,feminino).
 % Algoritmo para identificar o pai.
