@@ -64,7 +64,7 @@ sexo(bruce,masculino).
 sexo(leonardo,masculino).
 sexo(yuri,masculino).
 sexo(leon,masculino).
-sexo(peter,maculino).
+sexo(peter,masculino).
 sexo(isacc,masculino).
 sexo(bryan,masculino).
 sexo(natanael,masculino).
