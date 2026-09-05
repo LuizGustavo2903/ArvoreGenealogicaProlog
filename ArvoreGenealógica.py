@@ -1,0 +1,292 @@
+class ArvoreGenealogica:
+    def __init__(self):
+        # Armazena os pares (progenitor, filho)
+        self._progenitores = set()
+        # Armazena o sexo de cada pessoa
+        self._sexos = {}
+
+    def adicionar_progenitor(self, progenitor: str, filho: str):
+        """Adiciona a relação progenitor(progenitor, filho)."""
+        self._progenitores.add((progenitor.lower().strip(), filho.lower().strip()))
+
+    def definir_sexo(self, pessoa: str, sexo: str):
+        """Define o sexo de uma pessoa ('masculino' ou 'feminino')."""
+        self._sexos[pessoa.lower().strip()] = sexo.lower().strip()
+
+    # --- Regras / Relações Familiares ---
+
+    def progenitor(self, p: str, f: str) -> bool:
+        """progenitor(P, F)"""
+        return (p.lower().strip(), f.lower().strip()) in self._progenitores
+
+    def sexo(self, pessoa: str, s: str) -> bool:
+        """sexo(Pessoa, Sexo)"""
+        return self._sexos.get(pessoa.lower().strip()) == s.lower().strip()
+
+    def pai(self, p: str, f: str) -> bool:
+        """pai(X, Y) :- progenitor(X, Y), sexo(X, masculino)."""
+        return self.progenitor(p, f) and self.sexo(p, "masculino")
+
+    def mae(self, m: str, f: str) -> bool:
+        """mae(X, Y) :- progenitor(X, Y), sexo(X, feminino)."""
+        return self.progenitor(m, f) and self.sexo(m, "feminino")
+
+    def filho(self, f: str, p: str) -> bool:
+        """filho(X, Y) :- progenitor(Y, X)."""
+        return self.progenitor(p, f)
+
+    def irmao(self, x: str, y: str) -> bool:
+        """irmao(X, Y) :- progenitor(A, X), progenitor(A, Y), X \== Y, sexo(X, masculino)."""
+        x_lbl, y_lbl = x.lower().strip(), y.lower().strip()
+        if x_lbl == y_lbl or not self.sexo(x_lbl, "masculino"):
+            return False
+        for a, f in self._progenitores:
+            if f == x_lbl and (a, y_lbl) in self._progenitores:
+                return True
+        return False
+
+    def irma(self, x: str, y: str) -> bool:
+        """irma(X, Y) :- progenitor(A, X), progenitor(A, Y), X \== Y, sexo(X, feminino)."""
+        x_lbl, y_lbl = x.lower().strip(), y.lower().strip()
+        if x_lbl == y_lbl or not self.sexo(x_lbl, "feminino"):
+            return False
+        for a, f in self._progenitores:
+            if f == x_lbl and (a, y_lbl) in self._progenitores:
+                return True
+        return False
+
+    def vo_m(self, x: str, y: str) -> bool:
+        """vô(X, Y) :- progenitor(X, A), progenitor(A, Y), sexo(X, masculino)."""
+        x_lbl, y_lbl = x.lower().strip(), y.lower().strip()
+        if not self.sexo(x_lbl, "masculino"):
+            return False
+        for p1, a in self._progenitores:
+            if p1 == x_lbl and (a, y_lbl) in self._progenitores:
+                return True
+        return False
+
+    def vo_f(self, x: str, y: str) -> bool:
+        """vó(X, Y) :- progenitor(X, A), progenitor(A, Y), sexo(X, feminino)."""
+        x_lbl, y_lbl = x.lower().strip(), y.lower().strip()
+        if not self.sexo(x_lbl, "feminino"):
+            return False
+        for p1, a in self._progenitores:
+            if p1 == x_lbl and (a, y_lbl) in self._progenitores:
+                return True
+        return False
+
+    def tio(self, x: str, y: str) -> bool:
+        """tio(X, Y) :- irmao(X, A), progenitor(A, Y)."""
+        x_lbl, y_lbl = x.lower().strip(), y.lower().strip()
+        for a, f in self._progenitores:
+            if f == y_lbl and self.irmao(x_lbl, a):
+                return True
+        return False
+
+    def tia(self, x: str, y: str) -> bool:
+        """tia(X, Y) :- irma(X, A), progenitor(A, Y)."""
+        x_lbl, y_lbl = x.lower().strip(), y.lower().strip()
+        for a, f in self._progenitores:
+            if f == y_lbl and self.irma(x_lbl, a):
+                return True
+        return False
+
+    def primo(self, x: str, y: str) -> bool:
+        """primo(X, Y) :- progenitor(P1, X), progenitor(P2, Y), (irmao(P1, P2); irma(P1, P2)), X \== Y."""
+        x_lbl, y_lbl = x.lower().strip(), y.lower().strip()
+        if x_lbl == y_lbl:
+            return False
+        p1_list = [p for p, f in self._progenitores if f == x_lbl]
+        p2_list = [p for p, f in self._progenitores if f == y_lbl]
+        for p1 in p1_list:
+            for p2 in p2_list:
+                if self.irmao(p1, p2) or self.irma(p1, p2):
+                    return True
+        return False
+
+    # --- Métodos de Busca de Parentes ---
+
+    def obter_todas_pessoas(self) -> list:
+        """Retorna uma lista ordenada com o nome de todas as pessoas registradas."""
+        todas = (
+            set(p for p, _ in self._progenitores)
+            | set(f for _, f in self._progenitores)
+            | set(self._sexos.keys())
+        )
+        return sorted([p.capitalize() for p in todas])
+
+    def buscar_parentes(self, pessoa: str, relacao: str) -> list:
+        """Retorna a lista de pessoas que possuem a 'relacao' informada com a 'pessoa'."""
+        pessoa_lbl = pessoa.lower().strip()
+        relacoes = {
+            "pai": lambda x, y: self.pai(x, y),
+            "mae": lambda x, y: self.mae(x, y),
+            "filho": lambda x, y: self.filho(x, y),
+            "irmao": lambda x, y: self.irmao(x, y),
+            "irma": lambda x, y: self.irma(x, y),
+            "vo_m": lambda x, y: self.vo_m(x, y),
+            "vo_f": lambda x, y: self.vo_f(x, y),
+            "tio": lambda x, y: self.tio(x, y),
+            "tia": lambda x, y: self.tia(x, y),
+            "primo": lambda x, y: self.primo(x, y),
+        }
+        if relacao not in relacoes:
+            return []
+
+        todas_pessoas = set(p.lower() for p in self.obter_todas_pessoas())
+
+        resultados = [
+            p.capitalize()
+            for p in todas_pessoas
+            if relacoes[relacao](p, pessoa_lbl)
+        ]
+        return sorted(resultados)
+
+
+def carregar_base_dados() -> ArvoreGenealogica:
+    arvore = ArvoreGenealogica()
+
+    progenitores_dados = [
+        ("deus", "todos"), ("deus", "helena"), ("deus", "alice"),
+        ("helena", "lucas"), ("arthur", "lucas"),
+        ("alice", "cecilia"), ("alice", "davi"), ("samuel", "cecilia"), ("samuel", "davi"),
+        ("sophia", "valentina"), ("sophia", "anthony"), ("sophia", "daniel"),
+        ("lucas", "valentina"), ("lucas", "anthony"), ("lucas", "daniel"),
+        ("cecilia", "ada"), ("pedro", "ada"),
+        ("davi", "diego"), ("antonella", "diego"),
+        ("valentina", "clara"), ("rafael", "clara"),
+        ("daniel", "bruce"), ("daniel", "lorena"), ("lara", "bruce"), ("lara", "lorena"),
+        ("sarah", "nicole"), ("sarah", "leonardo"), ("diego", "nicole"), ("diego", "leonardo"),
+        ("clara", "melissa"), ("oliver", "melissa"),
+        ("lorena", "bianca"), ("gabriela", "bianca"),
+        ("nicole", "samira"), ("yuri", "samira"),
+        ("melissa", "catharina"), ("melissa", "vitoria"), ("melissa", "bryan"),
+        ("leon", "catharina"), ("leon", "vitoria"), ("leon", "bryan"),
+        ("bianca", "yasmin"), ("peter", "yasmin"),
+        ("samira", "nicolas"), ("isacc", "nicolas"),
+        ("yasmin", "hinata"), ("natanael", "hinata"),
+        ("nicolas", "luna"), ("charlotte", "luna")
+    ]
+
+    for p, f in progenitores_dados:
+        arvore.adicionar_progenitor(p, f)
+
+    sexos_dados = [
+        ("arthur", "masculino"), ("samuel", "masculino"), ("lucas", "masculino"),
+        ("pedro", "masculino"), ("davi", "masculino"), ("rafael", "masculino"),
+        ("anthony", "masculino"), ("daniel", "masculino"), ("diego", "masculino"),
+        ("oliver", "masculino"), ("bruce", "masculino"), ("leonardo", "masculino"),
+        ("yuri", "masculino"), ("leon", "masculino"), ("peter", "masculino"),
+        ("isacc", "masculino"), ("bryan", "masculino"), ("natanael", "masculino"),
+        ("nicolas", "masculino"),
+        ("helena", "feminino"), ("alice", "feminino"), ("sophia", "feminino"),
+        ("cecilia", "feminino"), ("antonella", "feminino"), ("valentina", "feminino"),
+        ("lara", "feminino"), ("ada", "feminino"), ("sarah", "feminino"),
+        ("clara", "feminino"), ("lorena", "feminino"), ("gabriela", "feminino"),
+        ("nicole", "feminino"), ("melissa", "feminino"), ("bianca", "feminino"),
+        ("samira", "feminino"), ("catharina", "feminino"), ("vitoria", "feminino"),
+        ("yasmin", "feminino"), ("charlotte", "feminino"), ("hinata", "feminino"),
+        ("luna", "feminino")
+    ]
+
+    for p, s in sexos_dados:
+        arvore.definir_sexo(p, s)
+
+    return arvore
+
+
+def menu_interativo():
+    arvore = carregar_base_dados()
+
+    while True:
+        print("\n" + "=" * 50)
+        print("      ÁRVORE GENEALÓGICA - MENU INTERATIVO")
+        print("=" * 50)
+        print("1. Verificar se Pessoa A tem parentesco com Pessoa B")
+        print("2. Buscar todos os parentes de uma pessoa por tipo")
+        print("3. Listar todas as pessoas cadastradas")
+        print("4. Adicionar nova relação de progenitor/filho")
+        print("0. Sair")
+        print("=" * 50)
+
+        opcao = input("Escolha uma opção: ").strip()
+
+        if opcao == "1":
+            print("\n--- VERIFICAR PARENTESCO ENTRE DUAS PESSOAS ---")
+            print("1. É Pai?")
+            print("2. É Mãe?")
+            print("3. É Filho(a)?")
+            print("4. É Irmão?")
+            print("5. É Irmã?")
+            print("6. É Vô?")
+            print("7. É Vó?")
+            print("8. É Tio?")
+            print("9. É Tia?")
+            print("10. É Primo(a)?")
+            
+            tipo = input("Escolha o número do parentesco: ").strip()
+            
+            p1 = input("Digite o nome da primeira pessoa (ex: Lucas): ").strip()
+            p2 = input("Digite o nome da segunda pessoa (ex: Valentina): ").strip()
+
+            mapeamento = {
+                "1": (arvore.pai, "pai de"),
+                "2": (arvore.mae, "mãe de"),
+                "3": (arvore.filho, "filho(a) de"),
+                "4": (arvore.irmao, "irmão de"),
+                "5": (arvore.irma, "irmã de"),
+                "6": (arvore.vo_m, "vô de"),
+                "7": (arvore.vo_f, "vó de"),
+                "8": (arvore.tio, "tio de"),
+                "9": (arvore.tia, "tia de"),
+                "10": (arvore.primo, "primo(a) de"),
+            }
+
+            if tipo in mapeamento:
+                func, rotulo = mapeamento[tipo]
+                resultado = func(p1, p2)
+                if resultado:
+                    print(f"\n[SIM] {p1.capitalize()} É {rotulo} {p2.capitalize()}.")
+                else:
+                    print(f"\n[NÃO] {p1.capitalize()} NÃO É {rotulo} {p2.capitalize()}.")
+            else:
+                print("\nOpção de parentesco inválida!")
+
+        elif opcao == "2":
+            print("\n--- BUSCAR TODOS OS PARENTES DE UMA PESSOA ---")
+            print("Opções válidas: pai, mae, filho, irmao, irma, vo_m, vo_f, tio, tia, primo")
+            relacao = input("Digite o tipo de parentesco desejado: ").strip().lower()
+            pessoa = input("Digite o nome da pessoa: ").strip()
+
+            parentes = arvore.buscar_parentes(pessoa, relacao)
+
+            if parentes:
+                print(f"\n{relacao.upper()}(S) de {pessoa.capitalize()}: {', '.join(parentes)}")
+            else:
+                print(f"\nNenhum parente do tipo '{relacao}' foi encontrado para {pessoa.capitalize()}.")
+
+        elif opcao == "3":
+            pessoas = arvore.obter_todas_pessoas()
+            print(f"\n--- PESSOAS CADASTRADAS ({len(pessoas)}) ---")
+            print(", ".join(pessoas))
+
+        elif opcao == "4":
+            print("\n--- ADICIONAR NOVA RELAÇÃO ---")
+            p = input("Nome do progenitor(a): ").strip()
+            f = input("Nome do filho(a): ").strip()
+            s = input("Sexo do progenitor (masculino/feminino): ").strip().lower()
+
+            arvore.adicionar_progenitor(p, f)
+            if s in ["masculino", "feminino"]:
+                arvore.definir_sexo(p, s)
+            print(f"\nRelação adicionada com sucesso: {p.capitalize()} é progenitor(a) de {f.capitalize()}.")
+
+        elif opcao == "0":
+            print("\nEncerrando o programa. Até logo!")
+            break
+        else:
+            print("\nOpção inválida! Tente novamente.")
+
+
+if __name__ == "__main__":
+    menu_interativo()
