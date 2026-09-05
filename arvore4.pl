@@ -24,10 +24,10 @@ progenitor(daniel,bruce).
 progenitor(daniel,lorena).
 progenitor(lara,bruce).
 progenitor(lara,lorena).
-progenitor(sarah,leonardo).
 progenitor(sarah,nicole).
-progenitor(diego,leonardo).
+progenitor(sarah,leonardo).
 progenitor(diego,nicole).
+progenitor(diego,leonardo).
 progenitor(clara,melissa).
 progenitor(oliver,melissa).
 progenitor(lorena,bianca).
@@ -49,8 +49,7 @@ progenitor(natanael,hinata).
 progenitor(nicolas,luna).
 progenitor(charlotte,luna).
 
-% Definindo os homens
-
+% Definindo o sexo masculino
 sexo(arthur,masculino).
 sexo(samuel,masculino).
 sexo(lucas,masculino).
@@ -65,14 +64,13 @@ sexo(bruce,masculino).
 sexo(leonardo,masculino).
 sexo(yuri,masculino).
 sexo(leon,masculino).
-sexo(peter,masculino).
+sexo(peter,maculino).
 sexo(isacc,masculino).
 sexo(bryan,masculino).
 sexo(natanael,masculino).
 sexo(nicolas,masculino).
 
-% Definindo mulheres
-
+% Definindo o sexo feminino
 sexo(helena,feminino).
 sexo(alice,feminino).
 sexo(sophia,feminino).
@@ -96,16 +94,15 @@ sexo(charlotte,feminino).
 sexo(hinata,feminino).
 sexo(luna,feminino).
 
-
-% Algoritmo para identificar a irm√£.
+% Algoritmo para identificar a irm„.
 irma(X,Y):-progenitor(A,X),progenitor(A,Y),X\==Y,sexo(X, feminino).
-% Algoritmo para identificar o irm√£o.
+% Algoritmo para identificar o irm„o.
 irmao(X,Y):-progenitor(A,X),progenitor(A,Y),X\==Y,sexo(X,masculino).
-% Algoritmo para identificar o av√¥.
-v√¥(X,Y):-progenitor(X,A),progenitor(A,Y),sexo(X,masculino).
-% Algoritmo para identificar a av√≥.
-v√≥(X,Y):-progenitor(X,A),progenitor(A,Y),sexo(X,feminino).
-% Algoritmo para identificar a m√£e.
+% Algoritmo para identificar o avÙ.
+vÙ(X,Y):-progenitor(X,A),progenitor(A,Y),sexo(X,masculino).
+% Algoritmo para identificar a avÛ.
+vÛ(X,Y):-progenitor(X,A),progenitor(A,Y),sexo(X,feminino).
+% Algoritmo para identificar a m„e.
 mae(X,Y):-progenitor(X,Y),sexo(X,feminino).
 % Algoritmo para identificar o pai.
 pai(X,Y):-progenitor(X,Y),sexo(X,masculino).
@@ -114,6 +111,6 @@ tio(X,Y):-irmao(X,A),progenitor(A,Y).
 % Algoritmo para identificar a tia.
 tia(X,Y):-irma(X,A),progenitor(A,Y).
 % Algoritmo para identificar os primos(independente do sexo).
-primo(X,Y):-progenitor(A,X),progenitor(A,Y),(irmao(X,Y);irma(X,Y)),X\==Y.
+primo(X,Y):-progenitor(P1,X),progenitor(P2,Y),(irmao(P1,P2);irma(P1,P2)),X\==Y.
 % Algoritmo para identificar os filhos(independente do sexo).
 filho(X,Y) :-progenitor(Y, X).
