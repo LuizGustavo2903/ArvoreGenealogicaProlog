@@ -104,6 +104,28 @@ class ArvoreGenealogica:
                     return True
         return False
 
+    def esposo(self, x: str, y: str) -> bool:
+        """esposo(X, Y) :- progenitor(X, F), progenitor(Y, F), X \== Y, sexo(X, masculino)."""
+        x_lbl, y_lbl = x.lower().strip(), y.lower().strip()
+        if x_lbl == y_lbl or not self.sexo(x_lbl, "masculino"):
+            return False
+        for p1, f1 in self._progenitores:
+            if p1 == x_lbl:
+                if (y_lbl, f1) in self._progenitores:
+                    return True
+        return False
+
+    def esposa(self, x: str, y: str) -> bool:
+        """esposa(X, Y) :- progenitor(X, F), progenitor(Y, F), X \== Y, sexo(X, feminino)."""
+        x_lbl, y_lbl = x.lower().strip(), y.lower().strip()
+        if x_lbl == y_lbl or not self.sexo(x_lbl, "feminino"):
+            return False
+        for p1, f1 in self._progenitores:
+            if p1 == x_lbl:
+                if (y_lbl, f1) in self._progenitores:
+                    return True
+        return False
+
     # --- Métodos de Busca de Parentes ---
 
     def obter_todas_pessoas(self) -> list:
@@ -129,6 +151,8 @@ class ArvoreGenealogica:
             "tio": lambda x, y: self.tio(x, y),
             "tia": lambda x, y: self.tia(x, y),
             "primo": lambda x, y: self.primo(x, y),
+            "esposo": lambda x, y: self.esposo(x, y),
+            "esposa": lambda x, y: self.esposa(x, y),
         }
         if relacao not in relacoes:
             return []
@@ -141,6 +165,31 @@ class ArvoreGenealogica:
             if relacoes[relacao](p, pessoa_lbl)
         ]
         return sorted(resultados)
+
+    def obter_todos_parentes_por_pessoa(self, pessoa: str) -> dict:
+        """Retorna um dicionário com todos os tipos de parentesco e a lista de parentes correspondente."""
+        ordem_relacoes = [
+            ("esposo", "Esposo"),
+            ("esposa", "Esposa"),
+            ("pai", "Pai"),
+            ("mae", "Mãe"),
+            ("filho", "Filho(a)"),
+            ("irmao", "Irmão"),
+            ("irma", "Irmã"),
+            ("vo_m", "Vô"),
+            ("vo_f", "Vó"),
+            ("tio", "Tio"),
+            ("tia", "Tia"),
+            ("primo", "Primo(a)"),
+        ]
+        
+        resultado = {}
+        for chave, rotulo in ordem_relacoes:
+            parentes = self.buscar_parentes(pessoa, chave)
+            if parentes:
+                resultado[rotulo] = parentes
+                
+        return resultado
 
 
 def carregar_base_dados() -> ArvoreGenealogica:
@@ -203,7 +252,7 @@ def menu_interativo():
         print("      ÁRVORE GENEALÓGICA - MENU INTERATIVO")
         print("=" * 50)
         print("1. Verificar se Pessoa A tem parentesco com Pessoa B")
-        print("2. Buscar todos os parentes de uma pessoa por tipo")
+        print("2. Buscar todos os parentes de uma pessoa")
         print("3. Listar todas as pessoas cadastradas")
         print("4. Adicionar nova relação de progenitor/filho")
         print("0. Sair")
@@ -223,6 +272,8 @@ def menu_interativo():
             print("8. É Tio?")
             print("9. É Tia?")
             print("10. É Primo(a)?")
+            print("11. É Esposo?")
+            print("12. É Esposa?")
             
             tipo = input("Escolha o número do parentesco: ").strip()
             
@@ -240,6 +291,8 @@ def menu_interativo():
                 "8": (arvore.tio, "tio de"),
                 "9": (arvore.tia, "tia de"),
                 "10": (arvore.primo, "primo(a) de"),
+                "11": (arvore.esposo, "esposo de"),
+                "12": (arvore.esposa, "esposa de"),
             }
 
             if tipo in mapeamento:
@@ -254,16 +307,18 @@ def menu_interativo():
 
         elif opcao == "2":
             print("\n--- BUSCAR TODOS OS PARENTES DE UMA PESSOA ---")
-            print("Opções válidas: pai, mae, filho, irmao, irma, vo_m, vo_f, tio, tia, primo")
-            relacao = input("Digite o tipo de parentesco desejado: ").strip().lower()
             pessoa = input("Digite o nome da pessoa: ").strip()
 
-            parentes = arvore.buscar_parentes(pessoa, relacao)
+            parentes_dict = arvore.obter_todos_parentes_por_pessoa(pessoa)
 
-            if parentes:
-                print(f"\n{relacao.upper()}(S) de {pessoa.capitalize()}: {', '.join(parentes)}")
+            print(f"\nPessoa: {pessoa.capitalize()}")
+            print("Parentes:")
+            
+            if parentes_dict:
+                for rotulo, lista in parentes_dict.items():
+                    print(f"  {rotulo}: {', '.join(lista)}")
             else:
-                print(f"\nNenhum parente do tipo '{relacao}' foi encontrado para {pessoa.capitalize()}.")
+                print("  Nenhum parentesco encontrado.")
 
         elif opcao == "3":
             pessoas = arvore.obter_todas_pessoas()
