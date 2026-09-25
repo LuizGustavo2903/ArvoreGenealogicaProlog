@@ -1,3 +1,7 @@
+% =====================
+% BASE DE FATOS 
+% =====================
+
 % Definindo os progenitores e seus filhos
 progenitor(deus,todos).
 progenitor(deus,helena).
@@ -94,23 +98,63 @@ sexo(charlotte,feminino).
 sexo(hinata,feminino).
 sexo(luna,feminino).
 
-% Algoritmo para identificar a irmã.
-irma(X,Y):-progenitor(A,X),progenitor(A,Y),X\==Y,sexo(X, feminino).
-% Algoritmo para identificar o irmão.
-irmao(X,Y):-progenitor(A,X),progenitor(A,Y),X\==Y,sexo(X,masculino).
-% Algoritmo para identificar o avô.
-vô(X,Y):-progenitor(X,A),progenitor(A,Y),sexo(X,masculino).
-% Algoritmo para identificar a avó.
-vó(X,Y):-progenitor(X,A),progenitor(A,Y),sexo(X,feminino).
-% Algoritmo para identificar a mãe.
-mae(X,Y):-progenitor(X,Y),sexo(X,feminino).
-% Algoritmo para identificar o pai.
-pai(X,Y):-progenitor(X,Y),sexo(X,masculino).
-% Algoritmo para identificar o tio.
-tio(X,Y):-irmao(X,A),progenitor(A,Y).
-% Algoritmo para identificar a tia.
-tia(X,Y):-irma(X,A),progenitor(A,Y).
-% Algoritmo para identificar os primos(independente do sexo).
-primo(X,Y):-progenitor(P1,X),progenitor(P2,Y),(irmao(P1,P2);irma(P1,P2)),X\==Y.
-% Algoritmo para identificar os filhos(independente do sexo).
-filho(X,Y) :-progenitor(Y, X).
+% ==============================================================================
+% ALGORITMOS REVISADOS (Sem duplicação de resultados)
+% ==============================================================================
+
+% Regras base/auxiliares sem duplicatas por backtracking
+irmao_base(X, Y) :- 
+    setof(A, progenitor(A, X), PaisX),
+    setof(B, progenitor(B, Y), PaisY),
+    X \== Y,
+    intersection(PaisX, PaisY, Interseccao),
+    Interseccao \== [].
+
+% Algoritmo para identificar a irmã
+irma(X, Y) :-
+    irmao_base(X, Y),
+    sexo(X, feminino).
+
+% Algoritmo para identificar o irmão
+irmao(X, Y) :-
+    irmao_base(X, Y),
+    sexo(X, masculino).
+
+% Algoritmo para identificar a mãe (Pessoa só tem 1 mãe, não duplica)
+mae(X, Y) :-
+    progenitor(X, Y),
+    sexo(X, feminino).
+
+% Algoritmo para identificar o pai (Pessoa só tem 1 pai, não duplica)
+pai(X, Y) :-
+    progenitor(X, Y),
+    sexo(X, masculino).
+
+% Algoritmo para identificar o avô
+vô(X, Y) :-
+    sexo(X, masculino),
+    setof(A, (progenitor(X, A), progenitor(A, Y)), _).
+
+% Algoritmo para identificar a avó
+vó(X, Y) :-
+    sexo(X, feminino),
+    setof(A, (progenitor(X, A), progenitor(A, Y)), _).
+
+% Algoritmo para identificar o tio
+tio(X, Y) :-
+    sexo(X, masculino),
+    setof(A, (progenitor(A, Y), irmao_base(X, A)), _).
+
+% Algoritmo para identificar a tia
+tia(X, Y) :-
+    sexo(X, feminino),
+    setof(A, (progenitor(A, Y), irmao_base(X, A)), _).
+
+% Algoritmo para identificar os primos (Lógica corrigida: filhos de irmãos)
+primo(X, Y) :-
+    X \== Y,
+    setof((P1, P2), (progenitor(P1, X), progenitor(P2, Y), irmao_base(P1, P2)), _).
+
+% Algoritmo para identificar os filhos
+filho(X, Y) :-
+    progenitor(Y, X).
