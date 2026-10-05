@@ -251,61 +251,15 @@ def menu_interativo():
         print("\n" + "=" * 50)
         print("      ÁRVORE GENEALÓGICA - MENU INTERATIVO")
         print("=" * 50)
-        print("1. Verificar se Pessoa A tem parentesco com Pessoa B")
-        print("2. Buscar todos os parentes de uma pessoa")
-        print("3. Listar todas as pessoas cadastradas")
-        print("4. Adicionar nova relação de progenitor/filho")
+        print("1. Buscar todos os parentes de uma pessoa")
+        print("2. Listar todas as pessoas cadastradas")
+        print("3. Adicionar nova relação de progenitor/filho")
         print("0. Sair")
         print("=" * 50)
 
         opcao = input("Escolha uma opção: ").strip()
 
         if opcao == "1":
-            print("\n--- VERIFICAR PARENTESCO ENTRE DUAS PESSOAS ---")
-            print("1. É Pai?")
-            print("2. É Mãe?")
-            print("3. É Filho(a)?")
-            print("4. É Irmão?")
-            print("5. É Irmã?")
-            print("6. É Vô?")
-            print("7. É Vó?")
-            print("8. É Tio?")
-            print("9. É Tia?")
-            print("10. É Primo(a)?")
-            print("11. É Esposo?")
-            print("12. É Esposa?")
-            
-            tipo = input("Escolha o número do parentesco: ").strip()
-            
-            p1 = input("Digite o nome da primeira pessoa (ex: Lucas): ").strip()
-            p2 = input("Digite o nome da segunda pessoa (ex: Valentina): ").strip()
-
-            mapeamento = {
-                "1": (arvore.pai, "pai de"),
-                "2": (arvore.mae, "mãe de"),
-                "3": (arvore.filho, "filho(a) de"),
-                "4": (arvore.irmao, "irmão de"),
-                "5": (arvore.irma, "irmã de"),
-                "6": (arvore.vo_m, "vô de"),
-                "7": (arvore.vo_f, "vó de"),
-                "8": (arvore.tio, "tio de"),
-                "9": (arvore.tia, "tia de"),
-                "10": (arvore.primo, "primo(a) de"),
-                "11": (arvore.esposo, "esposo de"),
-                "12": (arvore.esposa, "esposa de"),
-            }
-
-            if tipo in mapeamento:
-                func, rotulo = mapeamento[tipo]
-                resultado = func(p1, p2)
-                if resultado:
-                    print(f"\n[SIM] {p1.capitalize()} É {rotulo} {p2.capitalize()}.")
-                else:
-                    print(f"\n[NÃO] {p1.capitalize()} NÃO É {rotulo} {p2.capitalize()}.")
-            else:
-                print("\nOpção de parentesco inválida!")
-
-        elif opcao == "2":
             print("\n--- BUSCAR TODOS OS PARENTES DE UMA PESSOA ---")
             pessoa = input("Digite o nome da pessoa: ").strip()
 
@@ -320,12 +274,12 @@ def menu_interativo():
             else:
                 print("  Nenhum parentesco encontrado.")
 
-        elif opcao == "3":
+        elif opcao == "2":
             pessoas = arvore.obter_todas_pessoas()
             print(f"\n--- PESSOAS CADASTRADAS ({len(pessoas)}) ---")
             print(", ".join(pessoas))
 
-        elif opcao == "4":
+        elif opcao == "3":
             print("\n--- ADICIONAR NOVA RELAÇÃO ---")
             p = input("Nome do progenitor(a): ").strip()
             f = input("Nome do filho(a): ").strip()
