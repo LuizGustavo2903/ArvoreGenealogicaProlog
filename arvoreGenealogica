@@ -1,8 +1,7 @@
-% =====================
-% BASE DE FATOS 
-% =====================
+% ==============================================================================
+% BASE DE FATOS (Mantida exatamente como no original)
+% ==============================================================================
 
-% Definindo os progenitores e seus filhos
 progenitor(deus,todos).
 progenitor(deus,helena).
 progenitor(deus,alice).
@@ -99,10 +98,9 @@ sexo(hinata,feminino).
 sexo(luna,feminino).
 
 % ==============================================================================
-% ALGORITMOS REVISADOS (Sem duplicação de resultados)
+% REGRAS E ALGORITMOS (Sem duplicação)
 % ==============================================================================
 
-% Regras base/auxiliares sem duplicatas por backtracking
 irmao_base(X, Y) :- 
     setof(A, progenitor(A, X), PaisX),
     setof(B, progenitor(B, Y), PaisY),
@@ -110,51 +108,107 @@ irmao_base(X, Y) :-
     intersection(PaisX, PaisY, Interseccao),
     Interseccao \== [].
 
-% Algoritmo para identificar a irmã
 irma(X, Y) :-
     irmao_base(X, Y),
     sexo(X, feminino).
 
-% Algoritmo para identificar o irmão
 irmao(X, Y) :-
     irmao_base(X, Y),
     sexo(X, masculino).
 
-% Algoritmo para identificar a mãe (Pessoa só tem 1 mãe, não duplica)
 mae(X, Y) :-
     progenitor(X, Y),
     sexo(X, feminino).
 
-% Algoritmo para identificar o pai (Pessoa só tem 1 pai, não duplica)
 pai(X, Y) :-
     progenitor(X, Y),
     sexo(X, masculino).
 
-% Algoritmo para identificar o avô
 vô(X, Y) :-
     sexo(X, masculino),
     setof(A, (progenitor(X, A), progenitor(A, Y)), _).
 
-% Algoritmo para identificar a avó
 vó(X, Y) :-
     sexo(X, feminino),
     setof(A, (progenitor(X, A), progenitor(A, Y)), _).
 
-% Algoritmo para identificar o tio
 tio(X, Y) :-
     sexo(X, masculino),
     setof(A, (progenitor(A, Y), irmao_base(X, A)), _).
 
-% Algoritmo para identificar a tia
 tia(X, Y) :-
     sexo(X, feminino),
     setof(A, (progenitor(A, Y), irmao_base(X, A)), _).
 
-% Algoritmo para identificar os primos (Lógica corrigida: filhos de irmãos)
-primo(X, Y) :-
-    X \== Y,
-    setof((P1, P2), (progenitor(P1, X), progenitor(P2, Y), irmao_base(P1, P2)), _).
+primo_rel(X, Y) :-
+    progenitor(P1, X),
+    progenitor(P2, Y),
+    irmao_base(P1, P2),
+    X \== Y.
 
-% Algoritmo para identificar os filhos
+primo(X, Y) :-
+    setof(Pr, primo_rel(Pr, Y), Lista),
+    member(X, Lista).
+
 filho(X, Y) :-
     progenitor(Y, X).
+
+% ==============================================================================
+% EXIBIÇÃO VERTICAL DE TODAS AS RELAÇÕES DE UM INDIVÍDUO
+% ==============================================================================
+
+mostrar_relacoes(Pessoa) :-
+    format('~n----------------------------------------~n', []),
+    format('Pessoa: ~w~n', [Pessoa]),
+    format('Parentes:~n', []),
+    
+    % Pai
+    (   pai(P, Pessoa) -> format('  Pai: ~w~n', [P]) 
+    ;   format('  Pai: Nenhum~n') 
+    ),
+    
+    % Mãe
+    (   mae(M, Pessoa) -> format('  Mãe: ~w~n', [M]) 
+    ;   format('  Mãe: Nenhum~n') 
+    ),
+    
+    % Filhos
+    (   setof(F, filho(F, Pessoa), Filhos) -> format('  Filhos: ~w~n', [Filhos]) 
+    ;   format('  Filhos: Nenhum~n') 
+    ),
+    
+    % Irmãos
+    (   setof(I, irmao(I, Pessoa), Irmaos) -> format('  Irmãos: ~w~n', [Irmaos]) 
+    ;   format('  Irmãos: Nenhum~n') 
+    ),
+    
+    % Irmãs
+    (   setof(Ir, irma(Ir, Pessoa), Irmas) -> format('  Irmãs: ~w~n', [Irmas]) 
+    ;   format('  Irmãs: Nenhum~n') 
+    ),
+    
+    % Avô
+    (   setof(V, vô(V, Pessoa), AvosM) -> format('  Avô: ~w~n', [AvosM]) 
+    ;   format('  Avô: Nenhum~n') 
+    ),
+    
+    % Avó
+    (   setof(Vo, vó(Vo, Pessoa), AvosF) -> format('  Avó: ~w~n', [AvosF]) 
+    ;   format('  Avó: Nenhum~n') 
+    ),
+    
+    % Tio
+    (   setof(T, tio(T, Pessoa), Tios) -> format('  Tios: ~w~n', [Tios]) 
+    ;   format('  Tios: Nenhum~n') 
+    ),
+    
+    % Tia
+    (   setof(Ti, tia(Ti, Pessoa), Tias) -> format('  Tias: ~w~n', [Tias]) 
+    ;   format('  Tias: Nenhum~n') 
+    ),
+    
+    % Primos
+    (   setof(Pr, primo_rel(Pr, Pessoa), Primos) -> format('  Primos: ~w~n', [Primos]) 
+    ;   format('  Primos: Nenhum~n') 
+    ),
+    format('----------------------------------------~n', []).
