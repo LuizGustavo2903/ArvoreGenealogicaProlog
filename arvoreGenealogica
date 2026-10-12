@@ -95,9 +95,9 @@ sexo(charlotte,feminino).
 sexo(hinata,feminino).
 sexo(luna,feminino).
 
-% ==============================================================================
-% REGRAS E ALGORITMOS (Com suporte a cônjuges e tios(as) por afinidade)
-% ==============================================================================
+% =====================
+% REGRAS E ALGORITMOS 
+% =====================
 
 irmao_base(X, Y) :- 
     setof(A, progenitor(A, X), PaisX),
