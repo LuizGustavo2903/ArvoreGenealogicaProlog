@@ -1,6 +1,4 @@
-% ==============================================================================
-% BASE DE FATOS (Mantida exatamente como no original)
-% ==============================================================================
+% Arvore Genealógica em Prolog
 
 progenitor(deus,todos).
 progenitor(deus,helena).
@@ -98,7 +96,7 @@ sexo(hinata,feminino).
 sexo(luna,feminino).
 
 % ==============================================================================
-% REGRAS E ALGORITMOS (Sem duplicação)
+% REGRAS E ALGORITMOS (Com suporte a cônjuges e tios(as) por afinidade)
 % ==============================================================================
 
 irmao_base(X, Y) :- 
@@ -124,6 +122,12 @@ pai(X, Y) :-
     progenitor(X, Y),
     sexo(X, masculino).
 
+% Relação de cônjuges (compartilham um filho)
+conjuge(X, Y) :-
+    progenitor(X, F),
+    progenitor(Y, F),
+    X \== Y.
+
 vô(X, Y) :-
     sexo(X, masculino),
     setof(A, (progenitor(X, A), progenitor(A, Y)), _).
@@ -132,13 +136,30 @@ vó(X, Y) :-
     sexo(X, feminino),
     setof(A, (progenitor(X, A), progenitor(A, Y)), _).
 
+% Tios por sangue (auxiliares)
+tio_sangue(X, Y) :-
+    sexo(X, masculino),
+    irmao_base(X, A),
+    progenitor(A, Y).
+
+tia_sangue(X, Y) :-
+    sexo(X, feminino),
+    irmao_base(X, A),
+    progenitor(A, Y).
+
+% Tio (consanguíneo ou esposo da tia)
 tio(X, Y) :-
     sexo(X, masculino),
-    setof(A, (progenitor(A, Y), irmao_base(X, A)), _).
+    (   tio_sangue(X, Y)
+    ;   (tia_sangue(Tia, Y), conjuge(X, Tia))
+    ).
 
+% Tia (consanguínea ou esposa do tio)
 tia(X, Y) :-
     sexo(X, feminino),
-    setof(A, (progenitor(A, Y), irmao_base(X, A)), _).
+    (   tia_sangue(X, Y)
+    ;   (tio_sangue(Tio, Y), conjuge(X, Tio))
+    ).
 
 primo_rel(X, Y) :-
     progenitor(P1, X),
@@ -172,6 +193,11 @@ mostrar_relacoes(Pessoa) :-
     ;   format('  Mãe: Nenhum~n') 
     ),
     
+    % Esposo(a) / Cônjuge
+    (   setof(C, conjuge(C, Pessoa), Conjuges) -> format('  Esposo(a): ~w~n', [Conjuges]) 
+    ;   format('  Esposo(a): Nenhum~n') 
+    ),
+    
     % Filhos
     (   setof(F, filho(F, Pessoa), Filhos) -> format('  Filhos: ~w~n', [Filhos]) 
     ;   format('  Filhos: Nenhum~n') 
@@ -183,7 +209,7 @@ mostrar_relacoes(Pessoa) :-
     ),
     
     % Irmãs
-    (   setof(Ir, irma(Ir, Pessoa), Irmas) -> format('  Irmãs: ~w~n', [Irmas]) 
+    (   setof(Ir, irma(Ir, Pessoa), Irmas) -> format('  Irmãs: ~w~n', [Ir]) 
     ;   format('  Irmãs: Nenhum~n') 
     ),
     
@@ -197,12 +223,12 @@ mostrar_relacoes(Pessoa) :-
     ;   format('  Avó: Nenhum~n') 
     ),
     
-    % Tio
+    % Tios (inclui sangue e esposos de tias)
     (   setof(T, tio(T, Pessoa), Tios) -> format('  Tios: ~w~n', [Tios]) 
     ;   format('  Tios: Nenhum~n') 
     ),
     
-    % Tia
+    % Tias (inclui sangue e esposas de tios)
     (   setof(Ti, tia(Ti, Pessoa), Tias) -> format('  Tias: ~w~n', [Tias]) 
     ;   format('  Tias: Nenhum~n') 
     ),
