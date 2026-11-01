@@ -25,7 +25,7 @@
 > ⚠️ **Aviso:** O código deve rodar exclusivamente em ambiente online, sem necessidade de instalação local.
 
 - **Ambiente Online Utilizado:**  SWISH 
-- **Permalink:** [Insira aqui o link permanente. Teste em aba anônima antes de enviar!]
+- **Permalink:** [https://swish.swi-prolog.org/p/ArvoreGenealogicaProlog.pl]
 
 ### Instruções de Teste (Entrada e Saída)
 *Explique de forma clara como executar o código no ambiente online linkado.*
