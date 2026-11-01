@@ -28,16 +28,33 @@
 - **Permalink:** [https://swish.swi-prolog.org/p/ArvoreGenealogicaProlog.pl]
 
 ### Instruções de Teste (Entrada e Saída)
-*Explique de forma clara como executar o código no ambiente online linkado.*
+Ao clicar no link e abrir a tela do ambiente online, haverá um espaço de digitação no canto inferior direito que possui ?-.
+Nesta área, escreva: " mostrar_relacoes(). ".
+Dentro do parênteses, escreva o nome de uma pessoa que esteja na árvore para verificar quais relações a pessoa tem dentro da
+árvore.
+Após isso, aparecerá logo abaixo a opção RUN, clique nele e o código retornará com quais pessoas o nome digitado tem relação e
+qual o tipo de parentesco.
 
 **Entrada de Exemplo:**
 ```text
-Insira o exemplo de entrada aqui
+mostrar_relacoes(nicole).
 ```
 
 **Saída Esperada:**
 ```text
-Insira a saída esperada aqui
+Pessoa: nicole
+Parentes:
+  Pai: diego
+  Mãe: sarah
+  Esposo(a): [yuri]
+  Filhos: [samira]
+  Irmãos: [leonardo]
+  Irmãs: Nenhum
+  Avô: [davi]
+  Avó: [antonella]
+  Tios: Nenhum
+  Tias: Nenhum
+  Primos: Nenhum
 ```
 
 ## Relatório Técnico
