@@ -30,8 +30,10 @@
 ### Instruções de Teste (Entrada e Saída)
 Ao clicar no link e abrir a tela do ambiente online, haverá um espaço de digitação no canto inferior direito que possui ?-.
 Nesta área, escreva: " mostrar_relacoes(). ".
+
 Dentro do parênteses, escreva o nome de uma pessoa que esteja na árvore para verificar quais relações a pessoa tem dentro da
 árvore.
+
 Após isso, aparecerá logo abaixo a opção RUN, clique nele e o código retornará com quais pessoas o nome digitado tem relação e
 qual o tipo de parentesco.
 
