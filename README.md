@@ -62,22 +62,39 @@ Parentes:
 ## Relatório Técnico
 
 ### Descrição da Solução
-*Explique detalhadamente como o grupo resolveu o problema proposto. Descreva a lógica utilizada, a arquitetura do código e as principais funções, regras ou goroutines implementadas. Esta seção substitui a introdução e o desenvolvimento de um relatório tradicional.*
+O problema foi resolvido por meio da modelagem de uma árvore genealógica utilizando uma base de conhecimento em Prolog (com fatos de progenitor e sexo e regras lógicas de parentesco) e sua respectiva tradução para a Orientação a Objetos em Python.
+
+Na implementação lógica, foram estabelecidas regras para identificar pais, mães, irmãos, irmãs, avós, tios, tias (incluindo cônjuges/afins) e primos, incorporando predicados de agregação como setof/3 para evitar duplicações decorrentes do backtracking gerado pela dupla ascendência (pai e mãe).
+
+Na contraparte em Python, a solução estruturou os dados em conjuntos (sets) e dicionários (dicts) encapsulados na classe ArvoreGenealogica, oferecendo métodos dinâmicos de busca (buscar_parentes), tratamento de strings e menus interativos de terminal, além de relatórios textuais verticais para exibir todas as relações de um indivíduo simultaneamente.
 
 ### Análise Comparativa
-*Compare profundamente a linguagem e o paradigma estudados com os que você já domina (C, Java ou Python). Desenvolva suas respostas nos tópicos abaixo, conectando a prática com a teoria vista na disciplina.*
 
 ### 1. Sintaxe
-*(O que muda na forma de escrever a solução? A linguagem é mais declarativa? Exige menos linhas? Dê exemplos práticos comparando trechos do seu código com o que seria feito em C ou Java).*
+O Prolog adota um paradigma estritamente declarativo, onde o desenvolvedor declara fatos e regras de relação (ex: filho_de(X, Y) :- progenitor(Y, X).) e o motor de inferência resolve as consultas. O Python adota o paradigma imperativo e orientado a objetos, exigindo o controle procedural explícito do fluxo de execução. Enquanto a verificação de parentesco em Prolog ocorre por unificação direta de variáveis nas regras lógicas, em Python é necessário escrever compreensões de listas ou varreduras condicionais explícitas.
+
+Ex:
+
+
 
 ### 2. Semântica
-*(Explique as diferenças em relação a tipos, escopo e forma de avaliação. Aborde conceitos específicos do seu tema, como avaliação estrita vs. preguiçosa, unificação vs. atribuição, ou comunicação por canais).*
+Tipos e Avaliação: O Prolog baseia-se na lógica de predicados e unificação de termos, operando com avaliação orientada a busca e backtracking automático. O Python utiliza tipagem dinâmica, atribuição explícita de variáveis e avaliação estritamente sequencial.
+
+Escopo e Comportamento: As regras em Prolog possuem bidirecionalidade natural (uma mesma regra serve para buscar descendentes ou ascendentes dependendo de quais variáveis estão instanciadas). Em Python, os métodos exigem parâmetros direcionados e lógica de filtragem programada via funções lambda e dicionários de mapeamento.
 
 ### 3. Gerenciamento de Memória
-*(Como a linguagem escolhida lida com a memória? Compare o funcionamento interno desta linguagem com o gerenciamento manual do C ou a máquina virtual do Java).*
+Mecanismos internos: O Prolog gerencia a memória internamente através de sua base de dados dinâmica e pilhas de execução para o mecanismo de retrocesso (backtracking). O Python utiliza um coletor de lixo (garbage collector) baseado em contagem de referências e alocação dinâmica de objetos em tempo de execução.
+
+Comparação com o C: Diferente da linguagem C, onde o desenvolvedor precisa gerenciar explicitamente a alocação e liberação de memória com malloc e free, tanto o Prolog quanto o Python abstraem totalmente essa complexidade de baixo nível.
 
 ### 4. Trade-offs
-*(Quais as vantagens e desvantagens práticas deste novo paradigma para resolver o desafio específico do grupo, em relação aos paradigmas Imperativo e Orientado a Objetos?)*
+Vantagens do Prolog: Excelente para expressar relações complexas de forma extremamente concisa, delegando a complexidade da busca e unificação ao interpretador da linguagem.
+
+Desvantagens do Prolog: Curva de aprendizado íngreme, controle de fluxo menos intuitivo (comportamento de backtracking que pode gerar repetições e exige tratamento com setof/3), e maior dificuldade para criar interfaces textuais dinâmicas ou menus interativos complexos.
+
+Vantagens do Python: Elevada facilidade para estruturar menus interativos no terminal, manipulação robusta de textos/strings (.lower().strip()), formatação de saídas estruturadas e integração flexível com sistemas modernos.
+
+Desvantagens do Python: Demanda um volume muito maior de código imperativo e lógica procedural para implementar regras que no Prolog são deduzidas de forma puramente declarativa.
 
 ### Resumo da Análise Comparativa
 *Compare a linguagem/paradigma estudado com os que você já domina (C, Java ou Python). O detalhamento completo deve estar no PDF, mas inclua os pontos principais aqui.*
