@@ -89,9 +89,12 @@ Tipos e Avaliação: O Prolog baseia-se na lógica de predicados e unificação 
 Escopo e Comportamento: As regras em Prolog possuem bidirecionalidade natural (uma mesma regra serve para buscar descendentes ou ascendentes dependendo de quais variáveis estão instanciadas). Em Python, os métodos exigem parâmetros direcionados e lógica de filtragem programada via funções lambda e dicionários de mapeamento.
 
 ### 3. Gerenciamento de Memória
-Mecanismos internos: O Prolog gerencia a memória internamente através de sua base de dados dinâmica e pilhas de execução para o mecanismo de retrocesso (backtracking). O Python utiliza um coletor de lixo (garbage collector) baseado em contagem de referências e alocação dinâmica de objetos em tempo de execução.
 
-Comparação com o C: Diferente da linguagem C, onde o desenvolvedor precisa gerenciar explicitamente a alocação e liberação de memória com malloc e free, tanto o Prolog quanto o Python abstraem totalmente essa complexidade de baixo nível.
+O Prolog gerencia a memória internamente através da sua base de dados dinâmica de fatos e pilhas de execução de pilhas/trilhas (trail and local stacks) necessárias para suportar o mecanismo de backtracking.
+
+O Python (CPython) gerencia memória por meio de alocação dinâmica em heap combinada com um coletor de lixo (garbage collector) baseado primordialmente em contagem de referências e detecção de ciclos.
+
+Comparação com o C: Ao contrário da linguagem C — onde o programador é responsável pelo gerenciamento manual de ponteiros e chamadas explícitas a funções como malloc() e free() —, tanto o Prolog quanto o Python abstraem totalmente essa complexidade de baixo nível, eliminando riscos diretos de vazamentos de memória (memory leaks).
 
 ### 4. Trade-offs
 Vantagens do Prolog: Excelente para expressar relações complexas de forma extremamente concisa, delegando a complexidade da busca e unificação ao interpretador da linguagem.
