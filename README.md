@@ -1,11 +1,6 @@
 # Avaliação A2 - Paradigmas de Linguagens de Programação
 
-> Este arquivo é o esqueleto do **README.md** do repositório GitHub do seu grupo.
-> A Entrega deve ser feita exclusivamente pelo envio do link desse repositório.
-> Quaisquer instruções anteriores em desacordo com esta devem ser ignoradas
-> Preencha cada seção abaixo. Não altere a ordem e nem apague os títulos — apenas substitua os placeholders pelo conteúdo do seu projeto.
-
-**Grupo 05** <!-- Substitua XX pelo número do seu grupo -->
+**Grupo 05** 
 
 ## 👥 Integrantes (3 a 5 alunos)
 - Gustavo da Costa Matsuo (33646155)
@@ -21,8 +16,6 @@
 - **Descrição do Desafio:** Base de conhecimento genealógica
 
 ## Execução do Código
-
-> ⚠️ **Aviso:** O código deve rodar exclusivamente em ambiente online, sem necessidade de instalação local.
 
 - **Ambiente Online Utilizado:**  SWISH 
 - **Permalink:** [https://swish.swi-prolog.org/p/ArvoreGenealogicaProlog.pl]
@@ -62,11 +55,24 @@ Parentes:
 ## Relatório Técnico
 
 ### Descrição da Solução
-O problema foi resolvido por meio da modelagem de uma árvore genealógica utilizando uma base de conhecimento em Prolog (com fatos de progenitor e sexo e regras lógicas de parentesco) e sua respectiva tradução para a Orientação a Objetos em Python.
+O problema proposto foi resolvido por meio da modelagem e implementação de uma árvore genealógica utilizando duas abordagens distintas para fins comparativos: o paradigma lógico baseado em regras no Prolog e o paradigma orientado a objetos em Python.
 
-Na implementação lógica, foram estabelecidas regras para identificar pais, mães, irmãos, irmãs, avós, tios, tias (incluindo cônjuges/afins) e primos, incorporando predicados de agregação como setof/3 para evitar duplicações decorrentes do backtracking gerado pela dupla ascendência (pai e mãe).
+**1. Modelagem da Base de Conhecimento e Estrutura de Dados**
+Em Prolog: A base de fatos foi estruturada utilizando o predicado binário progenitor(PaiOuMae, Filho) para registrar de forma unívoca a ascendência entre os indivíduos, complementada pelo fato estático sexo(Pessoa, Genero) para classificar rigidamente cada indivíduo como masculino ou feminino.
 
-Na contraparte em Python, a solução estruturou os dados em conjuntos (sets) e dicionários (dicts) encapsulados na classe ArvoreGenealogica, oferecendo métodos dinâmicos de busca (buscar_parentes), tratamento de strings e menus interativos de terminal, além de relatórios textuais verticais para exibir todas as relações de um indivíduo simultaneamente.
+Em Python: A arquitetura encapsulou os dados dentro de uma classe dedicada (ArvoreGenealogica), armazenando as relações de parentesco em conjuntos estruturados (set de tuplas (progenitor, filho)) e os atributos demográficos em dicionários de mapeamento rápido (dict).
+
+**2. Arquitetura de Regras Lógicas e Relações Derivadas**
+A partir dos fatos básicos, construiu-se uma hierarquia modular de regras lógicas:
+
+Parentescos Primários e Diretos: Definição de regras para pai/2, mae/2 e filho_de/2 por meio da inversão e filtragem de gênero sobre os fatos de progenitor.
+
+Irmandade e Correção de Duplicatas por Dupla Ascendência: Como cada indivíduo possui nativamente dois progenitores (pai e mãe), consultas diretas geram duplicações por backtracking. Para solucionar isso, desenvolveu-se o predicado intermediário irmao_base/2, que valida o compartilhamento de progenitores, refinando-se depois em irmao/2 e irma/2. O uso da biblioteca nativa setof/3 garantiu o agrupamento e eliminação de duplicatas.
+
+Ascendência Estendida e Colaterais: Implementação de regras para avós (vô/2, vó/2), tios consanguíneos e tios por afinidade (incorporando a regra de conjuge/2 baseada em filhos em comum) e primos (primo/2).
+
+**3. Automatização de Relatórios Textuais Verticais**
+Para atender ao requisito de exibir todas as relações de um indivíduo de uma só vez, implementou-se o predicado unificado mostrar_relacoes/1 em Prolog (análogo à Opção 2 do menu interativo em Python). Este algoritmo varre de forma limpa todas as categorias de parentesco e imprime um relatório estruturado no terminal.
 
 ### Análise Comparativa
 
