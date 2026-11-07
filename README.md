@@ -78,8 +78,7 @@ Para atender ao requisito de exibir todas as relações de um indivíduo de uma 
 
 ### 1. Sintaxe
 O Prolog adota um paradigma estritamente declarativo, onde o desenvolvedor declara fatos e regras de relação (ex: filho_de(X, Y) :- progenitor(Y, X).) e o motor de inferência resolve as consultas. O Python adota o paradigma imperativo e orientado a objetos, exigindo o controle procedural explícito do fluxo de execução. Enquanto a verificação de parentesco em Prolog ocorre por unificação direta de variáveis nas regras lógicas, em Python é necessário escrever compreensões de listas ou varreduras condicionais explícitas.
-
-Ex:
+**Olhar Imagens 1 e 2 do repositório.**
 
 
 
@@ -97,26 +96,39 @@ O Python (CPython) gerencia memória por meio de alocação dinâmica em heap co
 Comparação com o C: Ao contrário da linguagem C — onde o programador é responsável pelo gerenciamento manual de ponteiros e chamadas explícitas a funções como malloc() e free() —, tanto o Prolog quanto o Python abstraem totalmente essa complexidade de baixo nível, eliminando riscos diretos de vazamentos de memória (memory leaks).
 
 ### 4. Trade-offs
-Vantagens do Prolog: Excelente para expressar relações complexas de forma extremamente concisa, delegando a complexidade da busca e unificação ao interpretador da linguagem.
+Vantagens do Prolog: Extrema concisão e poder expressivo para modelar domínios complexos baseados em relações e restrições lógicas, desonerando o programador de escrever algoritmos de busca manuais.
 
-Desvantagens do Prolog: Curva de aprendizado íngreme, controle de fluxo menos intuitivo (comportamento de backtracking que pode gerar repetições e exige tratamento com setof/3), e maior dificuldade para criar interfaces textuais dinâmicas ou menus interativos complexos.
+Desvantagens do Prolog: Curva de aprendizado íngreme, controle de fluxo opaco (o comportamento de backtracking pode gerar repetições indesejadas que exigem tratamento com setof/3), e menor flexibilidade para construir interfaces de usuário ou menus interativos complexos.
 
-Vantagens do Python: Elevada facilidade para estruturar menus interativos no terminal, manipulação robusta de textos/strings (.lower().strip()), formatação de saídas estruturadas e integração flexível com sistemas modernos.
+Vantagens do Python: Excelente legibilidade, facilidade robusta para gerenciar entradas e saídas via terminal (menus interativos), tratamento avançado de strings (.lower().strip()) e facilidade de integração com ecossistemas de software modernos.
 
-Desvantagens do Python: Demanda um volume muito maior de código imperativo e lógica procedural para implementar regras que no Prolog são deduzidas de forma puramente declarativa.
+Desvantagens do Python: Exige um volume consideravelmente maior de código imperativo e lógica procedural para resolver problemas de inferência que no Prolog são deduzidos de forma nativa e declarativa.
 
 ### Resumo da Análise Comparativa
-*Compare a linguagem/paradigma estudado com os que você já domina (C, Java ou Python). O detalhamento completo deve estar no PDF, mas inclua os pontos principais aqui.*
 
-*   **Sintaxe:** (O que muda na forma de escrever a solução?)
-*   **Semântica:** (Tipos, escopo, forma de avaliação - ex: estrita vs. preguiçosa, unificação vs. atribuição)
-*   **Gerenciamento de Memória:** (Coleta de lixo automática vs. gerenciamento manual)
+*   **Sintaxe:** O Prolog é declarativo baseando-se no que se deseja resolver por meio de fatos e regras lógicas, delegando a busca ao motor de inferência. O Python adota um estilo imperativo e orientado a objetos, exigindo algoritmos procedurais explícitos para percorrer estruturas.
+  
+*   **Semântica:** 
+
+*   **Gerenciamento de Memória:**
+No Prolog: o gerenciamento é automático e feito pela máquina abstrata da linguagem (como a WAM — Warren Abstract Machine), alocando pilhas temporárias para controlar os estados de backtracking e a base de fatos dinâmicos.
+No Python: é utilizada a coleta de lixo (Garbage Collection) baseada primordialmente em contagem de referências suplementada por detecção de ciclos para objetos no heap.
+Em comparação com o C que exige liberação manual com free e alocação com malloc, tanto o Prolog quanto o Python abstraem o gerenciamento de baixo nível para o programador.
 *   **Trade-offs:** (Vantagens e desvantagens do novo paradigma em relação aos anteriores)
 
 ## Log de Uso de Inteligência Artificial (IA)
-*O uso de IA (ChatGPT, Claude, Gemini, etc.) é permitido e incentivado para aprendizado, mas deve ser documentado. Preencha o log abaixo:*
 
-*   **O que foi pedido à IA:** [Descreva os prompts ou dúvidas enviadas]
-*   **Qual IA foi utilizada:** [Descreva modelo e versão. Exemplo: 'Anthropic Claude Fable 5.1']
-*   **O que foi aproveitado:** [Descreva quais partes de código, lógicas ou explicações foram utilizadas]
-*   **O que foi reescrito/entendido pelo grupo:** [Como o grupo adaptou a resposta da IA e o que aprenderam com isso. Lembre-se: qualquer integrante pode ser questionado no seminário.]
+
+*   **O que foi pedido à IA:**
+
+1- Foi pedido que a IA fizesse uma análise no código com a montagem da árvore, para verificar se havia irregularidades na sua construção.
+
+2- Auxiliar na montagem de algoritmos para mapear os parentescos disponíveis por um determinado indivíduo e extrair as suas relações(pai, mãe, tios, primos, irmãos, entre outros).
+
+3- Corrigir o código para evitar duplicatas no resultados do código.
+
+4- Montar a mesma árvore e os algoritmos feitos na linguagem Prolog, em Python.
+
+*   **Qual IA foi utilizada:** Google Gemini
+*   **O que foi aproveitado:** Foi levado em conta os algoritmos feitos pela IA, após ser testado cada um deles, além das explicações feitas para ajudar o grupo a entender o código como um todo.
+*   **O que foi reescrito/entendido pelo grupo:** A IA auxiliou no aprendizado da linguagem por meio de comentários, códigos e link de vídeos do YouTube, visto que era o primeiro contato do grupo com a linguagem. Foi analisado cada um dos códigos sugeridos pela IA para a resolução do problema proposto e rodados no ambiente online (Swi-Prolog).
