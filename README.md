@@ -83,9 +83,11 @@ O Prolog adota um paradigma estritamente declarativo, onde o desenvolvedor decla
 
 
 ### 2. Semântica
-Tipos e Avaliação: O Prolog baseia-se na lógica de predicados e unificação de termos, operando com avaliação orientada a busca e backtracking automático. O Python utiliza tipagem dinâmica, atribuição explícita de variáveis e avaliação estritamente sequencial.
+**Atribuição vs. Unificação:** Em linguagens imperativas e orientadas a objetos como o Python, a semântica de atribuição (=) opera como a vinculação de uma referência de memória a um objeto mutável ou imutável em um escopo local ou global explícito. Já o Prolog opera sob o princípio da unificação lógica baseada no casamento de padrões (pattern matching). No Prolog, as variáveis (iniciadas por letras maiúsculas, como X ou Y) não guardam valores atribuídos sequencialmente; elas representam termos lógicos que tentam encontrar uma correspondência estrutural com os fatos e regras da base de conhecimento para tornar a proposição verdadeira.
 
-Escopo e Comportamento: As regras em Prolog possuem bidirecionalidade natural (uma mesma regra serve para buscar descendentes ou ascendentes dependendo de quais variáveis estão instanciadas). Em Python, os métodos exigem parâmetros direcionados e lógica de filtragem programada via funções lambda e dicionários de mapeamento.
+**Forma de Avaliação (Retrocesso vs. Execução Sequencial):** O modelo de avaliação do Python é estritamente estipulado por um fluxo procedural e determinístico, onde cada instrução é executada linha por linha na ordem ditada pelo programador. Em contrapartida, o Prolog utiliza um motor de inferência baseado em busca em profundidade com retrocesso automático (backtracking). Quando uma regra falha, o interpretador retorna automaticamente ao ponto de escolha anterior para testar caminhos alternativos de unificação. Esse mecanismo exigiu cuidados específicos no projeto, como o uso de predicados de agregação (setof/3), para lidar com caminhos múltiplos na árvore genealógica (por exemplo, a dupla ascendência paterna e materna) que geravam respostas redundantes no console.
+
+**Bidirecionalidade e Escopo de Relações:** Semanticamente, as regras declarativas do Prolog possuem bidirecionalidade nativa. Uma única regra definida como progenitor(X, Y) serve de forma universal tanto para consultar quem são os filhos de um determinado pai ou mãe (passando X fixo e buscando Y) quanto para descobrir quem são os progenitores de um indivíduo (passando Y fixo e buscando X). No Python, o escopo semântico dos métodos de classes é unidirecional, exigindo a implementação procedural de lógicas distintas, filtragens por compreensões de listas ou varreduras direcionadas em dicionários e conjuntos para atender a cada sentido específico de busca.
 
 ### 3. Gerenciamento de Memória
 
@@ -106,14 +108,25 @@ Desvantagens do Python: Exige um volume consideravelmente maior de código imper
 
 ### Resumo da Análise Comparativa
 
-*   **Sintaxe:** O Prolog é declarativo baseando-se no que se deseja resolver por meio de fatos e regras lógicas, delegando a busca ao motor de inferência. O Python adota um estilo imperativo e orientado a objetos, exigindo algoritmos procedurais explícitos para percorrer estruturas.
+*   **Sintaxe:**
+O Prolog é declarativo baseando-se no que se deseja resolver por meio de fatos e regras lógicas, delegando a busca ao motor de inferência. O Python adota um estilo imperativo e orientado a objetos, exigindo algoritmos procedurais explícitos para percorrer estruturas.
   
-*   **Semântica:** 
+*   **Semântica:**
+
+A semântica de uma linguagem define o significado e o comportamento dos comandos e estruturas em tempo de execução, revelando distinções marcantes entre o paradigma lógico do Prolog e o imperativo/orientado a objetos do Python.
+
+Primeiramente, a manipulação de dados opera por lógicas opostas: enquanto o Python utiliza a atribuição explícita de referências a objetos em escopos locais ou globais, o Prolog fundamenta-se na unificação lógica e no casamento de padrões, onde variáveis em letras maiúsculas representam termos abstratos que buscam correspondência estrutural na base de conhecimento.
+
+Quanto ao modelo de avaliação, o Python adota uma execução estritamente estrita e sequencial, ditada pelo fluxo procedural instrução por instrução. Em contraste, o Prolog utiliza um motor de inferência baseado em retrocesso automático (backtracking), retornando a pontos de escolha anteriores quando uma proposição falha — o que exigiu o uso de predicados de agregação para evitar redundâncias na árvore.
+
+Por fim, destaca-se a bidirecionalidade: as regras em Prolog possuem bidirecionalidade nativa, servindo tanto para buscar ascendentes quanto descendentes com o mesmo predicado, ao passo que os métodos em Python são unidirecionais, exigindo lógicas procedurais dedicadas e filtragens programadas para cada direção de busca.
 
 *   **Gerenciamento de Memória:**
+
 No Prolog: o gerenciamento é automático e feito pela máquina abstrata da linguagem (como a WAM — Warren Abstract Machine), alocando pilhas temporárias para controlar os estados de backtracking e a base de fatos dinâmicos.
 No Python: é utilizada a coleta de lixo (Garbage Collection) baseada primordialmente em contagem de referências suplementada por detecção de ciclos para objetos no heap.
 Em comparação com o C que exige liberação manual com free e alocação com malloc, tanto o Prolog quanto o Python abstraem o gerenciamento de baixo nível para o programador.
+
 *   **Trade-offs:** (Vantagens e desvantagens do novo paradigma em relação aos anteriores)
 
 ## Log de Uso de Inteligência Artificial (IA)
@@ -121,14 +134,16 @@ Em comparação com o C que exige liberação manual com free e alocação com m
 
 *   **O que foi pedido à IA:**
 
-1- Foi pedido que a IA fizesse uma análise no código com a montagem da árvore, para verificar se havia irregularidades na sua construção.
+Inicialmente, solicitou-se à inteligência artificial uma análise detalhada sobre o código inicial em Prolog da árvore genealógica para identificar e corrigir eventuais falhas estruturais, pontos soltos ou irregularidades na construção dos fatos. Posteriormente, o grupo pediu auxílio na formulação e no aprimoramento de algoritmos lógicos para mapear e extrair todas as relações de parentesco possíveis de um indivíduo — como pais, mães, irmãos, avós, tios e primos —, além da criação de rotinas específicas para exibir de forma unificada e vertical todas essas conexões de uma só vez. Um ponto central demandado foi a resolução do problema de duplicação de resultados gerados pelo motor de inferência devido à dupla ascendência (pai e mãe). Por fim, pediu-se a transposição de toda essa lógica relacional para um código equivalente em Python, estruturado com classes, coleções eficientes (set e dict) e menus interativos de terminal.
 
-2- Auxiliar na montagem de algoritmos para mapear os parentescos disponíveis por um determinado indivíduo e extrair as suas relações(pai, mãe, tios, primos, irmãos, entre outros).
+*   **Qual IA foi utilizada:**
 
-3- Corrigir o código para evitar duplicatas no resultados do código.
+Google Gemini
 
-4- Montar a mesma árvore e os algoritmos feitos na linguagem Prolog, em Python.
+*   **O que foi aproveitado:**
 
-*   **Qual IA foi utilizada:** Google Gemini
-*   **O que foi aproveitado:** Foi levado em conta os algoritmos feitos pela IA, após ser testado cada um deles, além das explicações feitas para ajudar o grupo a entender o código como um todo.
-*   **O que foi reescrito/entendido pelo grupo:** A IA auxiliou no aprendizado da linguagem por meio de comentários, códigos e link de vídeos do YouTube, visto que era o primeiro contato do grupo com a linguagem. Foi analisado cada um dos códigos sugeridos pela IA para a resolução do problema proposto e rodados no ambiente online (Swi-Prolog).
+Do suporte da IA, aproveitou-se integralmente a estruturação lógica das regras de inferência em Prolog — incluindo a criação de predicados intermediários de base (irmao_base/2) e o uso de predicados de agregação como setof/3 para suprimir duplicatas indesejadas decorrentes do backtracking. Também foram aproveitados os códigos funcionais adaptados, como o predicado de exibição vertical (mostrar_relacoes/1) e a arquitetura orientada a objetos em Python com o menu interativo formatado para listar de maneira limpa todos os parentescos de um indivíduo.
+
+*   **O que foi reescrito/entendido pelo grupo:**
+
+O grupo absorveu conceitos fundamentais de programação lógica e paradigmas de computação que representavam um contato inédito com a linguagem Prolog. Por meio das explicações detalhadas, correções de sintaxe, exemplos de código e materiais de apoio fornecidos pela IA, os integrantes compreenderam a distinção entre a abordagem declarativa (baseada em fatos e regras unificadas) e a abordagem imperativa/orientada a objetos. Cada trecho de código sugerido foi rigorosamente testado, validado e executado no ambiente online do SWI-Prolog e interpretadores Python, garantindo que o grupo dominasse a lógica por trás da modelagem genealógica e do tratamento de restrições de busca.
